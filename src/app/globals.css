@@ -10,6 +10,12 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --color-gold: #C1AC84;
+  --color-dark: #0F0F0C;
+  --color-dark-alt: #13130F;
+  --color-cream: #FDFBF7;
+  --font-playfair: var(--font-playfair), serif;
+  --font-cormorant: var(--font-cormorant), serif;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -23,4 +29,36 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+*:focus-visible {
+  outline: 1px solid #c1ac84;
+  outline-offset: 2px;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0f0f0c;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(193, 172, 132, 0.3);
+  border-radius: 3px;
+}
+
+@keyframes scrollPulse {
+  0%,
+  100% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  50% {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
