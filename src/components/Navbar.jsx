@@ -1,9 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 
-const NAV_LINKS = ["Buy", "Sell", "Communities", "About", "Contact"];
+const NAV_LINKS = [
+  { label: "Buy", href: "/buy" },
+  { label: "Sell", href: "/sell" },
+  { label: "Communities", href: "/#communities" },
+  { label: "About", href: "/#about" },
+  { label: "Contact", href: "/#contact" },
+];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -34,14 +41,14 @@ export default function Navbar() {
         {/* Desktop links */}
         <div className="hidden md:flex items-center gap-8">
           {NAV_LINKS.map((item) => (
-            <a
-              key={item}
-              href={`#${item.toLowerCase()}`}
+            <Link
+              key={item.label}
+              href={item.href}
               className="relative group font-cormorant text-[0.85rem] text-white/60 tracking-[0.2em] uppercase hover:text-white/90 transition-colors"
             >
-              {item}
+              {item.label}
               <span className="absolute -bottom-1 left-0 w-0 h-px bg-gold transition-all duration-300 group-hover:w-full" />
-            </a>
+            </Link>
           ))}
           <button className="ml-4 px-6 py-2 font-cormorant text-xs tracking-widest uppercase border border-gold/50 text-gold hover:bg-gold hover:text-dark transition-all duration-300">
             Schedule a Call
@@ -68,14 +75,14 @@ export default function Navbar() {
             className="md:hidden bg-dark/95 px-6 pb-6 overflow-hidden"
           >
             {NAV_LINKS.map((item) => (
-              <a
-                key={item}
-                href={`#${item.toLowerCase()}`}
+              <Link
+                key={item.label}
+                href={item.href}
                 onClick={() => setOpen(false)}
                 className="block py-3 border-b border-white/5 font-cormorant text-white/60 tracking-[0.2em] uppercase text-sm"
               >
-                {item}
-              </a>
+                {item.label}
+              </Link>
             ))}
           </motion.div>
         )}
