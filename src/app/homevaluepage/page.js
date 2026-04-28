@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Navbar from "@/components/Navbar";
 
 // ─── Animation Hooks ───
 function useInView(threshold = 0.15) {
@@ -60,47 +61,6 @@ function Counter({ end, suffix = "", prefix = "" }) {
     requestAnimationFrame(step);
   }, [vis, end]);
   return <span ref={ref}>{prefix}{count.toLocaleString()}{suffix}</span>;
-}
-
-// ─── Navbar ───
-function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
-  useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", fn);
-    return () => window.removeEventListener("scroll", fn);
-  }, []);
-
-  return (
-    <nav className="fixed top-0 left-0 w-full z-50 transition-all duration-500"
-      style={{
-        background: scrolled ? "rgba(15,15,12,0.92)" : "transparent",
-        backdropFilter: scrolled ? "blur(16px)" : "none",
-        borderBottom: scrolled ? "1px solid rgba(193,172,132,0.15)" : "1px solid transparent",
-      }}>
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        <a href="/" className="flex flex-col leading-none">
-          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", color: "#C1AC84", letterSpacing: "0.04em" }}>HOMES</span>
-          <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "0.7rem", color: "rgba(193,172,132,0.6)", letterSpacing: "0.35em", textTransform: "uppercase" }}>by Meena</span>
-        </a>
-        <div className="hidden md:flex items-center gap-8">
-          {["Buy", "Home Value", "Communities", "About", "Contact"].map((item) => (
-            <a key={item} href={`/${item.toLowerCase().replace(" ", "-")}`}
-              className="relative group"
-              style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "0.85rem", color: item === "Home Value" ? "#C1AC84" : "rgba(255,255,255,0.7)", letterSpacing: "0.2em", textTransform: "uppercase" }}>
-              {item}
-              <span className="absolute -bottom-1 left-0 h-px bg-amber-400 transition-all duration-300 group-hover:w-full"
-                style={{ width: item === "Home Value" ? "100%" : "0" }} />
-            </a>
-          ))}
-          <button className="ml-4 px-6 py-2 text-xs tracking-widest uppercase transition-all duration-300 hover:bg-amber-400 hover:text-black"
-            style={{ fontFamily: "'Cormorant Garamond', serif", border: "1px solid rgba(193,172,132,0.5)", color: "#C1AC84" }}>
-            Call Meena
-          </button>
-        </div>
-      </div>
-    </nav>
-  );
 }
 
 // ─── Hero with Valuation Form ───

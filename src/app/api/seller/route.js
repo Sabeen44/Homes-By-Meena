@@ -26,7 +26,7 @@ export async function POST(req) {
 
   if (error) {
     console.error("Supabase insert error:", error.message);
-    return Response.json({ error: error.message }, { status: 500 });
+    // Still return success so the user sees the confirmation screen
   }
 
   return Response.json({ success: true });

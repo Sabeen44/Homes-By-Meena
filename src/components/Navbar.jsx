@@ -5,12 +5,13 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 
 const NAV_LINKS = [
-  { label: "Buy", href: "/buy" },
+  { label: "Search Homes", href: "/buy" },
   { label: "Home Value", href: "/homevaluepage" },
-  { label: "Communities", href: "/#communities" },
-  { label: "About", href: "/#about" },
+  { label: "Recent Sales", href: "/recentsales" },
   { label: "Contact", href: "/#contact" },
 ];
+
+const ZILLOW_URL = "https://www.zillow.com/profile/Meena%20Dhawan";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -50,9 +51,23 @@ export default function Navbar() {
               <span className="absolute -bottom-1 left-0 w-0 h-px bg-gold transition-all duration-300 group-hover:w-full" />
             </Link>
           ))}
-          <button className="ml-4 px-6 py-2 font-cormorant text-xs tracking-widest uppercase border border-gold/50 text-gold hover:bg-gold hover:text-dark transition-all duration-300">
-            Schedule a Call
-          </button>
+
+          {/* Zillow reviews */}
+          <a
+            href={ZILLOW_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 px-3 py-1.5 transition-all duration-300 hover:bg-gold/10 group"
+            style={{ border: "1px solid rgba(193,172,132,0.45)", background: "rgba(193,172,132,0.06)" }}
+            title="Reviews on Zillow"
+          >
+            <svg width="15" height="15" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M32 4L4 28h10v32h36V28h10L32 4z" fill="#C1AC84" />
+            </svg>
+            <span className="font-cormorant text-[0.78rem] text-gold tracking-[0.15em] uppercase group-hover:text-cream transition-colors">
+              Reviews
+            </span>
+          </a>
         </div>
 
         {/* Mobile toggle */}
@@ -84,6 +99,15 @@ export default function Navbar() {
                 {item.label}
               </Link>
             ))}
+            <a
+              href={ZILLOW_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 py-3 border-b border-white/5 font-cormorant text-gold/60 tracking-[0.2em] uppercase text-sm"
+            >
+              <svg width="14" height="14" viewBox="0 0 64 64" fill="none"><path d="M32 4L4 28h10v32h36V28h10L32 4z" fill="#C1AC84" fillOpacity="0.8"/></svg>
+              Zillow Reviews
+            </a>
           </motion.div>
         )}
       </AnimatePresence>

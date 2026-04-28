@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { STATS } from "@/lib/data";
 
 
@@ -84,8 +85,9 @@ export default function Hero() {
               transition: "all 1s cubic-bezier(.16,1,.3,1) 0.9s",
             }}
           >
-            <button
-              className="px-8 py-3.5 text-sm tracking-widest uppercase transition-all duration-300 hover:scale-105"
+            <Link
+              href="/buy"
+              className="px-8 py-3.5 text-sm tracking-widest uppercase transition-all duration-300 hover:scale-105 inline-block"
               style={{
                 fontFamily: "'Cormorant Garamond', serif",
                 background: "#C1AC84",
@@ -94,9 +96,10 @@ export default function Hero() {
               }}
             >
               Search Homes
-            </button>
-            <button
-              className="px-8 py-3.5 text-sm tracking-widest uppercase transition-all duration-300 hover:bg-white/5"
+            </Link>
+            <Link
+              href="/homevaluepage"
+              className="px-8 py-3.5 text-sm tracking-widest uppercase transition-all duration-300 hover:bg-white/5 inline-block"
               style={{
                 fontFamily: "'Cormorant Garamond', serif",
                 border: "1px solid rgba(193,172,132,0.3)",
@@ -104,7 +107,7 @@ export default function Hero() {
               }}
             >
               Get a Home Valuation
-            </button>
+            </Link>
           </div>
 
           {/* Stats row */}

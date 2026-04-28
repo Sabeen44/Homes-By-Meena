@@ -2,23 +2,50 @@
 
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import Link from "next/link";
-import { GoogleMap, useLoadScript, OverlayView, Marker } from "@react-google-maps/api";
+import Map, { Marker } from "react-map-gl/mapbox";
+import "mapbox-gl/dist/mapbox-gl.css";
  
 // ─── Sample Listing Data ───
 const SAMPLE_LISTINGS = [
-  { id: 1, lat: 47.6815, lng: -122.2087, address: "14236 95th Ave NE", city: "Kirkland", price: 1250000, beds: 4, baths: 3, sqft: 2850, year: 2019, type: "Single Family", status: "Active", img: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80", daysOnMarket: 3 },
-  { id: 2, lat: 47.7610, lng: -122.2054, address: "18422 Bothell Way NE", city: "Bothell", price: 985000, beds: 3, baths: 2.5, sqft: 2200, year: 2021, type: "Townhome", status: "Active", img: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80", daysOnMarket: 7 },
-  { id: 3, lat: 47.6740, lng: -122.1215, address: "8820 161st Ave NE", city: "Redmond", price: 1475000, beds: 5, baths: 3.5, sqft: 3400, year: 2022, type: "Single Family", status: "Active", img: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600&q=80", daysOnMarket: 1 },
-  { id: 4, lat: 47.6164, lng: -122.0356, address: "1234 228th Ave SE", city: "Sammamish", price: 1150000, beds: 4, baths: 3, sqft: 2600, year: 2018, type: "Single Family", status: "Pending", img: "https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?w=600&q=80", daysOnMarket: 14 },
-  { id: 5, lat: 47.6101, lng: -122.2015, address: "520 Bellevue Way NE", city: "Bellevue", price: 2100000, beds: 5, baths: 4, sqft: 4200, year: 2023, type: "Single Family", status: "Active", img: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=600&q=80", daysOnMarket: 5 },
-  { id: 6, lat: 47.5301, lng: -122.0326, address: "980 NW Maple St", city: "Issaquah", price: 875000, beds: 3, baths: 2, sqft: 1850, year: 2017, type: "Condo", status: "Active", img: "https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?w=600&q=80", daysOnMarket: 21 },
-  { id: 7, lat: 47.6901, lng: -122.2240, address: "405 Market St", city: "Kirkland", price: 1650000, beds: 4, baths: 3.5, sqft: 3100, year: 2024, type: "Single Family", status: "Active", img: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&q=80", daysOnMarket: 2 },
-  { id: 8, lat: 47.7502, lng: -122.1620, address: "22015 Country Dr", city: "Bothell", price: 725000, beds: 2, baths: 2, sqft: 1400, year: 2020, type: "Townhome", status: "Active", img: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=600&q=80", daysOnMarket: 12 },
-  { id: 9, lat: 47.6580, lng: -122.1340, address: "15612 NE 80th St", city: "Redmond", price: 1320000, beds: 4, baths: 3, sqft: 2900, year: 2021, type: "Single Family", status: "Active", img: "https://images.unsplash.com/photo-1605146769289-440113cc3d00?w=600&q=80", daysOnMarket: 9 },
-  { id: 10, lat: 47.6440, lng: -122.0580, address: "4500 Klahanie Blvd", city: "Sammamish", price: 1580000, beds: 5, baths: 4, sqft: 3600, year: 2020, type: "Single Family", status: "Pending", img: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=600&q=80", daysOnMarket: 18 },
+  // Kirkland
+  { id: 1,  lat: 47.6815, lng: -122.2087, address: "14236 95th Ave NE",       city: "Kirkland",   price: 1250000, beds: 4, baths: 3,   sqft: 2850, year: 2019, type: "Single Family", status: "Active",  img: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80", daysOnMarket: 3  },
+  { id: 7,  lat: 47.6901, lng: -122.2240, address: "405 Market St",            city: "Kirkland",   price: 1650000, beds: 4, baths: 3.5, sqft: 3100, year: 2024, type: "Single Family", status: "Active",  img: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&q=80", daysOnMarket: 2  },
+  { id: 11, lat: 47.6760, lng: -122.2050, address: "11812 NE 128th St",        city: "Kirkland",   price: 1095000, beds: 3, baths: 2.5, sqft: 2100, year: 2016, type: "Townhome",      status: "Active",  img: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&q=80", daysOnMarket: 6  },
+  { id: 12, lat: 47.6840, lng: -122.1960, address: "7823 112th Ave NE",        city: "Kirkland",   price: 1825000, beds: 5, baths: 4,   sqft: 3750, year: 2022, type: "Single Family", status: "Active",  img: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=600&q=80", daysOnMarket: 1  },
+  { id: 13, lat: 47.6720, lng: -122.2110, address: "3204 Lake Washington Blvd", city: "Kirkland",  price: 3200000, beds: 5, baths: 4.5, sqft: 4800, year: 2021, type: "Single Family", status: "Active",  img: "https://images.unsplash.com/photo-1600047509782-20d39509f26d?w=600&q=80", daysOnMarket: 8  },
+  // Bothell
+  { id: 2,  lat: 47.7610, lng: -122.2054, address: "18422 Bothell Way NE",     city: "Bothell",    price: 985000,  beds: 3, baths: 2.5, sqft: 2200, year: 2021, type: "Townhome",      status: "Active",  img: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80", daysOnMarket: 7  },
+  { id: 8,  lat: 47.7502, lng: -122.1620, address: "22015 Country Dr",         city: "Bothell",    price: 725000,  beds: 2, baths: 2,   sqft: 1400, year: 2020, type: "Townhome",      status: "Active",  img: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=600&q=80", daysOnMarket: 12 },
+  { id: 14, lat: 47.7680, lng: -122.1980, address: "2314 228th St SE",         city: "Bothell",    price: 1120000, beds: 4, baths: 3,   sqft: 2650, year: 2018, type: "Single Family", status: "Pending", img: "https://images.unsplash.com/photo-1576941089067-2de3c901e126?w=600&q=80", daysOnMarket: 20 },
+  { id: 15, lat: 47.7420, lng: -122.2080, address: "10523 Harbour Pointe Blvd", city: "Bothell",   price: 860000,  beds: 3, baths: 2,   sqft: 1950, year: 2015, type: "Single Family", status: "Active",  img: "https://images.unsplash.com/photo-1592595896551-12b371d546d5?w=600&q=80", daysOnMarket: 15 },
+  // Redmond
+  { id: 3,  lat: 47.6740, lng: -122.1215, address: "8820 161st Ave NE",        city: "Redmond",    price: 1475000, beds: 5, baths: 3.5, sqft: 3400, year: 2022, type: "Single Family", status: "Active",  img: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600&q=80", daysOnMarket: 1  },
+  { id: 9,  lat: 47.6580, lng: -122.1340, address: "15612 NE 80th St",         city: "Redmond",    price: 1320000, beds: 4, baths: 3,   sqft: 2900, year: 2021, type: "Single Family", status: "Active",  img: "https://images.unsplash.com/photo-1605146769289-440113cc3d00?w=600&q=80", daysOnMarket: 9  },
+  { id: 16, lat: 47.6810, lng: -122.1120, address: "7412 Redmond Way",         city: "Redmond",    price: 1180000, beds: 3, baths: 2.5, sqft: 2300, year: 2020, type: "Townhome",      status: "Active",  img: "https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=600&q=80", daysOnMarket: 4  },
+  { id: 17, lat: 47.6650, lng: -122.1050, address: "16240 NE 87th St",         city: "Redmond",    price: 995000,  beds: 3, baths: 2,   sqft: 1900, year: 2017, type: "Single Family", status: "Active",  img: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80", daysOnMarket: 11 },
+  // Sammamish
+  { id: 4,  lat: 47.6164, lng: -122.0356, address: "1234 228th Ave SE",        city: "Sammamish",  price: 1150000, beds: 4, baths: 3,   sqft: 2600, year: 2018, type: "Single Family", status: "Pending", img: "https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?w=600&q=80", daysOnMarket: 14 },
+  { id: 10, lat: 47.6440, lng: -122.0580, address: "4500 Klahanie Blvd",       city: "Sammamish",  price: 1580000, beds: 5, baths: 4,   sqft: 3600, year: 2020, type: "Single Family", status: "Pending", img: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=600&q=80", daysOnMarket: 18 },
+  { id: 18, lat: 47.6020, lng: -122.0420, address: "2890 Sahalee Dr E",        city: "Sammamish",  price: 2250000, beds: 6, baths: 4.5, sqft: 5100, year: 2023, type: "Single Family", status: "Active",  img: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&q=80", daysOnMarket: 3  },
+  { id: 19, lat: 47.6280, lng: -122.0310, address: "824 244th Ave NE",         city: "Sammamish",  price: 1045000, beds: 4, baths: 2.5, sqft: 2400, year: 2016, type: "Single Family", status: "Active",  img: "https://images.unsplash.com/photo-1600585153490-76fb20a32601?w=600&q=80", daysOnMarket: 22 },
+  // Bellevue
+  { id: 5,  lat: 47.6101, lng: -122.2015, address: "520 Bellevue Way NE",      city: "Bellevue",   price: 2100000, beds: 5, baths: 4,   sqft: 4200, year: 2023, type: "Single Family", status: "Active",  img: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=600&q=80", daysOnMarket: 5  },
+  { id: 20, lat: 47.6200, lng: -122.1870, address: "1640 Bellevue Ave",        city: "Bellevue",   price: 1780000, beds: 4, baths: 3.5, sqft: 3300, year: 2022, type: "Single Family", status: "Active",  img: "https://images.unsplash.com/photo-1449844908441-8829872d2607?w=600&q=80", daysOnMarket: 7  },
+  { id: 21, lat: 47.5980, lng: -122.1760, address: "3012 108th Ave SE",        city: "Bellevue",   price: 1395000, beds: 3, baths: 2.5, sqft: 2500, year: 2019, type: "Condo",         status: "Active",  img: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&q=80", daysOnMarket: 10 },
+  { id: 22, lat: 47.6050, lng: -122.1950, address: "10116 NE 4th St",          city: "Bellevue",   price: 3850000, beds: 6, baths: 5,   sqft: 6200, year: 2024, type: "Single Family", status: "Active",  img: "https://images.unsplash.com/photo-1613977257363-707ba9348227?w=600&q=80", daysOnMarket: 2  },
+  // Issaquah
+  { id: 6,  lat: 47.5301, lng: -122.0326, address: "980 NW Maple St",          city: "Issaquah",   price: 875000,  beds: 3, baths: 2,   sqft: 1850, year: 2017, type: "Condo",         status: "Active",  img: "https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?w=600&q=80", daysOnMarket: 21 },
+  { id: 23, lat: 47.5420, lng: -122.0540, address: "1825 NW Gilman Blvd",      city: "Issaquah",   price: 1060000, beds: 4, baths: 3,   sqft: 2750, year: 2018, type: "Single Family", status: "Active",  img: "https://images.unsplash.com/photo-1501183638710-841dd1904471?w=600&q=80", daysOnMarket: 16 },
+  { id: 24, lat: 47.5180, lng: -122.0280, address: "675 Front St N",           city: "Issaquah",   price: 790000,  beds: 3, baths: 2,   sqft: 1700, year: 2015, type: "Townhome",      status: "Pending", img: "https://images.unsplash.com/photo-1523217582562-09d0def993a6?w=600&q=80", daysOnMarket: 25 },
+  // Mill Creek
+  { id: 25, lat: 47.8601, lng: -122.2040, address: "15624 Main St",            city: "Mill Creek", price: 1025000, beds: 4, baths: 3,   sqft: 2700, year: 2019, type: "Single Family", status: "Active",  img: "https://images.unsplash.com/photo-1598228723793-52759bba239c?w=600&q=80", daysOnMarket: 8  },
+  { id: 26, lat: 47.8540, lng: -122.1950, address: "3201 164th St SW",         city: "Mill Creek", price: 885000,  beds: 3, baths: 2.5, sqft: 2050, year: 2020, type: "Single Family", status: "Active",  img: "https://images.unsplash.com/photo-1625602812206-5ec545ca1231?w=600&q=80", daysOnMarket: 13 },
+  // Snohomish
+  { id: 27, lat: 47.9129, lng: -122.0982, address: "830 Pine Ave",             city: "Snohomish",  price: 765000,  beds: 3, baths: 2,   sqft: 1920, year: 2016, type: "Single Family", status: "Active",  img: "https://images.unsplash.com/photo-1567496898669-ee935f5f647a?w=600&q=80", daysOnMarket: 19 },
+  { id: 28, lat: 47.9240, lng: -122.1050, address: "1442 Bickford Ave",        city: "Snohomish",  price: 680000,  beds: 3, baths: 2,   sqft: 1650, year: 2014, type: "Single Family", status: "Active",  img: "https://images.unsplash.com/photo-1543489822-c49534f3271f?w=600&q=80", daysOnMarket: 30 },
 ];
  
-const CITIES = ["All Cities", "Kirkland", "Bothell", "Redmond", "Sammamish", "Bellevue", "Issaquah"];
+const CITIES = ["All Cities", "Kirkland", "Bothell", "Redmond", "Sammamish", "Bellevue", "Issaquah", "Mill Creek", "Snohomish"];
 const TYPES = ["All Types", "Single Family", "Townhome", "Condo"];
 const SORT_OPTIONS = ["Newest", "Price: Low to High", "Price: High to Low", "Most Bedrooms", "Largest"];
  
@@ -89,20 +116,12 @@ function ClusterMarker({ cluster, onSelect, isActive = false }) {
   );
 }
 
-const HIGHLIGHT_ICON = {
-  url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="56" height="56">
-      <circle cx="28" cy="28" r="24" fill="rgba(193,172,132,0.2)" stroke="#C1AC84" stroke-width="2.5"/>
-    </svg>`
-  )}`,
-  scaledSize: { width: 56, height: 56 },
-  anchor: { x: 28, y: 28 },
-};
-
 // ─── Map Component ───
 function MapView({ listings, onSelect, selectedId }) {
-  const { isLoaded } = useLoadScript({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY,
+  const [viewport, setViewport] = useState({
+    latitude: MAP_CENTER.lat,
+    longitude: MAP_CENTER.lng,
+    zoom: 11,
   });
 
   const clusters = useMemo(() => {
@@ -116,47 +135,46 @@ function MapView({ listings, onSelect, selectedId }) {
 
   const activeListing = selectedId ? listings.find((l) => l.id === selectedId) : null;
 
-  if (!isLoaded) return (
-    <div className="w-full h-full flex items-center justify-center" style={{ background: "#13130F" }}>
-      <span style={{ fontFamily: "'Cormorant Garamond', serif", color: "rgba(193,172,132,0.4)", letterSpacing: "0.2em", fontSize: "0.8rem" }}>
-        Loading map...
-      </span>
-    </div>
-  );
-
   return (
     <div className="relative w-full h-full">
-      <GoogleMap
-        zoom={11}
-        center={MAP_CENTER}
-        mapContainerClassName="w-full h-full"
-        options={{
-          disableDefaultUI: true,
-          zoomControl: true,
-          zoomControlOptions: { position: 3 },
-          scrollwheel: true,
-        }}
+      <Map
+        {...viewport}
+        onMove={(e) => setViewport(e.viewState)}
+        mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
+        mapStyle="mapbox://styles/mapbox/light-v11"
+        style={{ width: "100%", height: "100%" }}
       >
-        {clusters.map((cluster) => (
-          <OverlayView
-            key={cluster.city}
-            position={{ lat: cluster.lat, lng: cluster.lng }}
-            mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
-          >
-            <ClusterMarker cluster={cluster} onSelect={onSelect} />
-          </OverlayView>
-        ))}
+        {clusters.map((cluster) => {
+          const isActive = !!selectedId && cluster.listings.some((l) => l.id === selectedId);
+          return (
+            <Marker
+              key={cluster.city}
+              latitude={cluster.lat}
+              longitude={cluster.lng}
+            >
+              <ClusterMarker cluster={cluster} onSelect={onSelect} isActive={isActive} />
+            </Marker>
+          );
+        })}
 
         {activeListing && (
           <Marker
-            key={activeListing.id}
-            position={{ lat: activeListing.lat, lng: activeListing.lng }}
-            icon={HIGHLIGHT_ICON}
-            clickable={false}
-            zIndex={999}
-          />
+            key={`highlight-${activeListing.id}`}
+            latitude={activeListing.lat}
+            longitude={activeListing.lng}
+            style={{ zIndex: 999 }}
+          >
+            <div style={{
+              transform: "translate(-50%, -50%)",
+              width: "52px", height: "52px", borderRadius: "50%",
+              background: "rgba(193,172,132,0.15)",
+              border: "2px solid rgba(193,172,132,0.8)",
+              animation: "ping 1.2s ease-out infinite",
+              pointerEvents: "none",
+            }} />
+          </Marker>
         )}
-      </GoogleMap>
+      </Map>
 
       {/* Results count overlay */}
       <div

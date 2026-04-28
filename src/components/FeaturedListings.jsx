@@ -1,4 +1,5 @@
 'use client'
+import Link from "next/link";
 import { FadeUp } from "@/components/animations/FadeUp";
 import { LISTINGS } from "@/lib/data";
 import Image from "next/image";
@@ -13,10 +14,10 @@ export default function FeaturedListings() {
       <div className="max-w-7xl mx-auto px-6">
         <FadeUp>
           <p style={{ fontFamily: "'Cormorant Garamond', serif", color: "#C1AC84", letterSpacing: "0.35em", textTransform: "uppercase", fontSize: "0.75rem" }}>
-            Featured Properties
+            Notable Sales
           </p>
           <h2 className="mt-3" style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2rem, 3.5vw, 3rem)", color: "#FDFBF7", fontWeight: 400 }}>
-            Eastside <span style={{ fontStyle: "italic", color: "#C1AC84" }}>Listings</span>
+            Homes Sold by <span style={{ fontStyle: "italic", color: "#C1AC84" }}>Meena</span>
           </h2>
         </FadeUp>
 
@@ -82,8 +83,9 @@ export default function FeaturedListings() {
         </div>
 
         <FadeUp className="mt-12 text-center">
-          <button
-            className="px-10 py-3 text-xs tracking-widest uppercase transition-all duration-300 hover:bg-amber-400/10"
+          <Link
+            href="/recentsales"
+            className="px-10 py-3 text-xs tracking-widest uppercase transition-all duration-300 hover:bg-amber-400/10 inline-block"
             style={{
               fontFamily: "'Cormorant Garamond', serif",
               border: "1px solid rgba(193,172,132,0.3)",
@@ -91,7 +93,7 @@ export default function FeaturedListings() {
             }}
           >
             View All Listings
-          </button>
+          </Link>
         </FadeUp>
       </div>
     </section>

@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect, useRef } from "react";
 
 // ─── Animation ───
@@ -193,11 +195,10 @@ export default function RecentSalesPage() {
           <div className="hidden md:flex items-center gap-8">
             {[
               { label: "Buy", href: "/buy" },
-              { label: "Home Value", href: "/home-value" },
-              { label: "Recent Sales", href: "/recent-sales", active: true },
-              { label: "Communities", href: "/communities" },
-              { label: "About", href: "/about" },
-              { label: "Contact", href: "/contact" },
+              { label: "Home Value", href: "/homevaluepage" },
+              { label: "Recent Sales", href: "/recentsales", active: true },
+              { label: "About", href: "/#about" },
+              { label: "Contact", href: "/#contact" },
             ].map((item) => (
               <a key={item.label} href={item.href} className="relative group"
                 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "0.85rem", color: item.active ? "#C1AC84" : "rgba(255,255,255,0.7)", letterSpacing: "0.2em", textTransform: "uppercase" }}>

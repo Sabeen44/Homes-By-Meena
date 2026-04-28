@@ -14,7 +14,7 @@ export default function About() {
             <div className="relative">
               <div style={{ aspectRatio: "3/4", background: "rgba(193,172,132,0.05)" }}>
                 <img
-                  src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=600&q=80"
+                  src="/images/meena.jpeg"
                   alt="Real Estate Professional"
                   className="w-full h-full object-cover"
                   style={{ filter: "brightness(0.9) sepia(0.15)" }}
