@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect, useRef } from "react";
 
 // ─── Animation Hooks ───
@@ -104,16 +106,35 @@ function Navbar() {
 // ─── Hero with Valuation Form ───
 function HeroValuation() {
   const [loaded, setLoaded] = useState(false);
-  const [address, setAddress] = useState("");
-  const [step, setStep] = useState(0); // 0=address, 1=details, 2=contact
-  const [formData, setFormData] = useState({ beds: "", baths: "", sqft: "", condition: "", name: "", email: "", phone: "" });
+  const [step, setStep] = useState(0); // 0=address, 1=details, 2=contact, 3=success
+  const [submitting, setSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    street: "", city: "Kirkland", state: "WA", zip: "",
+    beds: "", baths: "", sqft: "", condition: "",
+    name: "", email: "", phone: "",
+  });
 
   useEffect(() => { setTimeout(() => setLoaded(true), 100); }, []);
 
-  const updateField = (key, val) => setFormData({ ...formData, [key]: val });
+  const updateField = (key, val) => setFormData((prev) => ({ ...prev, [key]: val }));
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/seller", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      if (res.ok) setStep(3);
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden" style={{ background: "#0F0F0C" }}>
+    <form onSubmit={handleSubmit} className="relative min-h-screen flex items-center overflow-hidden" style={{ background: "#0F0F0C" }}>
       {/* Background image */}
       <div className="absolute inset-0">
         <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1400&q=80" alt="" className="w-full h-full object-cover" style={{ filter: "brightness(0.25) contrast(1.1)" }} />
@@ -219,18 +240,18 @@ function HeroValuation() {
                 <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "0.85rem", color: "rgba(253,251,247,0.35)", marginBottom: "1.5rem" }}>
                   We'll prepare a detailed market analysis for your specific property.
                 </p>
-                <input type="text" placeholder="Street Address" value={address} onChange={(e) => setAddress(e.target.value)}
+                <input type="text" placeholder="Street Address" value={formData.street} onChange={(e) => updateField("street", e.target.value)}
                   className="w-full px-5 py-4 outline-none mb-3 transition-all duration-200 focus:border-amber-400/40"
                   style={{ fontFamily: "'Cormorant Garamond', serif", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(193,172,132,0.15)", color: "#FDFBF7", fontSize: "0.95rem" }} />
                 <div className="grid grid-cols-2 gap-3">
-                  <input type="text" placeholder="City" defaultValue="Kirkland"
+                  <input type="text" placeholder="City" value={formData.city} onChange={(e) => updateField("city", e.target.value)}
                     className="w-full px-5 py-4 outline-none transition-all duration-200 focus:border-amber-400/40"
                     style={{ fontFamily: "'Cormorant Garamond', serif", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(193,172,132,0.15)", color: "#FDFBF7", fontSize: "0.95rem" }} />
                   <div className="grid grid-cols-2 gap-3">
-                    <input type="text" placeholder="State" defaultValue="WA"
+                    <input type="text" placeholder="State" value={formData.state} onChange={(e) => updateField("state", e.target.value)}
                       className="w-full px-5 py-4 outline-none transition-all duration-200 focus:border-amber-400/40"
                       style={{ fontFamily: "'Cormorant Garamond', serif", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(193,172,132,0.15)", color: "#FDFBF7", fontSize: "0.95rem" }} />
-                    <input type="text" placeholder="ZIP"
+                    <input type="text" placeholder="ZIP" value={formData.zip} onChange={(e) => updateField("zip", e.target.value)}
                       className="w-full px-5 py-4 outline-none transition-all duration-200 focus:border-amber-400/40"
                       style={{ fontFamily: "'Cormorant Garamond', serif", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(193,172,132,0.15)", color: "#FDFBF7", fontSize: "0.95rem" }} />
                   </div>
@@ -342,13 +363,34 @@ function HeroValuation() {
                     Back
                   </button>
                   <button
-                    className="flex-1 py-4 text-xs tracking-widest uppercase transition-all duration-300 hover:scale-[1.02]"
+                    type="submit"
+                    disabled={submitting}
+                    className="flex-1 py-4 text-xs tracking-widest uppercase transition-all duration-300 hover:scale-[1.02] disabled:opacity-60 disabled:cursor-not-allowed"
                     style={{ fontFamily: "'Cormorant Garamond', serif", background: "#C1AC84", color: "#0F0F0C", fontWeight: 600 }}>
-                    Get My Free Valuation
+                    {submitting ? "Sending..." : "Get My Free Valuation"}
                   </button>
                 </div>
                 <p className="mt-4 text-center" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "0.7rem", color: "rgba(253,251,247,0.2)" }}>
                   Your information is private and will never be shared.
+                </p>
+              </div>
+            )}
+
+            {/* Step 3: Success */}
+            {step === 3 && (
+              <div className="text-center py-8" style={{ animation: "fadeIn 0.4s ease" }}>
+                <div className="w-16 h-16 mx-auto mb-6 flex items-center justify-center rounded-full" style={{ border: "1px solid rgba(193,172,132,0.3)" }}>
+                  <span style={{ color: "#C1AC84", fontSize: "1.5rem" }}>✓</span>
+                </div>
+                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", color: "#FDFBF7", marginBottom: "0.75rem" }}>
+                  Request Received
+                </h3>
+                <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "1rem", color: "rgba(253,251,247,0.5)", lineHeight: 1.7 }}>
+                  Meena will personally review your property and deliver a complimentary CMA to <span style={{ color: "#C1AC84" }}>{formData.email}</span> within 24 hours.
+                </p>
+                <p className="mt-6" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "0.85rem", color: "rgba(193,172,132,0.5)", letterSpacing: "0.1em" }}>
+                  Questions? Call directly at{" "}
+                  <a href="tel:4256288863" style={{ color: "#C1AC84" }}>425-628-8863</a>
                 </p>
               </div>
             )}
@@ -357,7 +399,7 @@ function HeroValuation() {
       </div>
 
       <style>{`@keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }`}</style>
-    </section>
+    </form>
   );
 }
 
