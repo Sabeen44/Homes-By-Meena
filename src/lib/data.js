@@ -1,3 +1,12 @@
+export const AGENT = {
+  name: "Meena Dhawan",
+  phone: "425-628-8863",
+  phoneTel: "4256288863",
+  office: "Keller Williams Eastside",
+  location: "Kirkland, WA",
+  zillow: "https://www.zillow.com/profile/Meena%20Dhawan",
+};
+
 export const LISTINGS = [
   {
     id: 1,
@@ -17,7 +26,7 @@ export const LISTINGS = [
     baths: 2.5,
     sqft: "2,200",
     tag: "Open House",
-    img: "/images/lsitings-2.jpeg",
+    img: "/images/listing-2.jpeg",
   },
   {
     id: 3,

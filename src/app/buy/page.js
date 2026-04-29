@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
-import Link from "next/link";
+import SharedNavbar from "@/components/Navbar";
+import { AGENT } from "@/lib/data";
 import Map, { Marker } from "react-map-gl/mapbox";
 import "mapbox-gl/dist/mapbox-gl.css";
  
@@ -123,6 +124,15 @@ function MapView({ listings, onSelect, selectedId }) {
     longitude: MAP_CENTER.lng,
     zoom: 11,
   });
+
+  if (!process.env.NEXT_PUBLIC_MAPBOX_TOKEN) return (
+    <div className="w-full h-full flex flex-col items-center justify-center gap-3" style={{ background: "#13130F" }}>
+      <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", color: "rgba(253,251,247,0.4)" }}>Map unavailable</span>
+      <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "0.8rem", color: "rgba(193,172,132,0.4)", letterSpacing: "0.15em" }}>
+        Add NEXT_PUBLIC_MAPBOX_TOKEN to .env.local
+      </span>
+    </div>
+  );
 
   const clusters = useMemo(() => {
     const map = {};
@@ -265,7 +275,7 @@ function ListingCard({ listing, isHovered, onHover, onSelect, isSelected }) {
 }
  
 // ─── Filter Bar ───
-function FilterBar({ filters, setFilters, sortBy, setSortBy }) {
+function FilterBar({ filters, setFilters, sortBy, setSortBy, search, setSearch }) {
   const [expanded, setExpanded] = useState(null);
   const filterRef = useRef(null);
  
@@ -339,6 +349,8 @@ function FilterBar({ filters, setFilters, sortBy, setSortBy }) {
         <input
           type="text"
           placeholder="Address, city, or ZIP..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
           className="w-full pl-9 pr-4 py-2.5 outline-none transition-all duration-200 focus:border-gold/30"
           style={{
             fontFamily: "'Cormorant Garamond', serif",
@@ -510,18 +522,20 @@ function DetailPanel({ listing, onClose }) {
  
         {/* CTA buttons */}
         <div className="mt-8 flex gap-3">
-          <button
-            className="flex-1 py-3 text-xs tracking-widest uppercase transition-all duration-300 hover:scale-[1.02]"
+          <a
+            href={`tel:${AGENT.phoneTel}`}
+            className="flex-1 py-3 text-xs tracking-widest uppercase transition-all duration-300 hover:scale-[1.02] text-center"
             style={{ fontFamily: "'Cormorant Garamond', serif", background: "#C1AC84", color: "#0F0F0C", fontWeight: 600 }}
           >
             Schedule Tour
-          </button>
-          <button
-            className="flex-1 py-3 text-xs tracking-widest uppercase transition-all duration-300 hover:bg-white/5"
+          </a>
+          <a
+            href="/#contact"
+            className="flex-1 py-3 text-xs tracking-widest uppercase transition-all duration-300 hover:bg-white/5 text-center"
             style={{ fontFamily: "'Cormorant Garamond', serif", border: "1px solid rgba(193,172,132,0.3)", color: "#C1AC84" }}
           >
             Request Info
-          </button>
+          </a>
         </div>
  
         <div className="mt-6 text-center">
@@ -534,56 +548,11 @@ function DetailPanel({ listing, onClose }) {
   );
 }
  
-// ─── Navbar (compact for map page) ───
-function Navbar() {
-  return (
-    <nav
-      className="w-full z-50"
-      style={{
-        background: "rgba(15,15,12,0.95)",
-        backdropFilter: "blur(16px)",
-        borderBottom: "1px solid rgba(193,172,132,0.1)",
-      }}
-    >
-      <div className="max-w-full mx-auto px-6 py-3 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-3">
-          <div className="flex flex-col leading-none">
-            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", color: "#C1AC84", letterSpacing: "0.04em" }}>HOMES</span>
-            <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "0.6rem", color: "rgba(193,172,132,0.5)", letterSpacing: "0.35em", textTransform: "uppercase" }}>by Meena</span>
-          </div>
-          <div className="w-px h-8 mx-3" style={{ background: "rgba(193,172,132,0.12)" }} />
-          <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "0.7rem", color: "rgba(193,172,132,0.4)", letterSpacing: "0.25em", textTransform: "uppercase" }}>
-            Map Search
-          </span>
-        </Link>
-
-        <div className="hidden md:flex items-center gap-6">
-          {["Buy", "Sell", "Communities", "About", "Contact"].map((item) => (
-            <Link
-              key={item}
-              href={`/${item.toLowerCase()}`}
-              className="relative group"
-              style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "0.75rem", color: "rgba(255,255,255,0.5)", letterSpacing: "0.2em", textTransform: "uppercase" }}
-            >
-              {item}
-              <span className="absolute -bottom-1 left-0 w-0 h-px bg-gold transition-all duration-300 group-hover:w-full" />
-            </Link>
-          ))}
-          <button
-            className="ml-2 px-5 py-1.5 text-xs tracking-widest uppercase transition-all duration-300 hover:bg-gold hover:text-dark"
-            style={{ fontFamily: "'Cormorant Garamond', serif", border: "1px solid rgba(193,172,132,0.4)", color: "#C1AC84" }}
-          >
-            Call Meena
-          </button>
-        </div>
-      </div>
-    </nav>
-  );
-}
  
 // ─── Main App ───
 export default function MapSearchPage() {
   const [filters, setFilters] = useState({ city: "All Cities", type: "All Types", beds: "Any", minPrice: "", maxPrice: "" });
+  const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("Newest");
   const [hoveredId, setHoveredId] = useState(null);
   const [selectedId, setSelectedId] = useState(null); // map highlight + scroll
@@ -599,6 +568,10 @@ export default function MapSearchPage() {
 
   // Filter logic
   const filtered = SAMPLE_LISTINGS.filter((l) => {
+    if (search) {
+      const q = search.toLowerCase();
+      if (!l.address.toLowerCase().includes(q) && !l.city.toLowerCase().includes(q)) return false;
+    }
     if (filters.city !== "All Cities" && l.city !== filters.city) return false;
     if (filters.type !== "All Types" && l.type !== filters.type) return false;
     if (filters.beds !== "Any") {
@@ -624,8 +597,16 @@ export default function MapSearchPage() {
     <div className="h-screen flex flex-col overflow-hidden" style={{ background: "#0F0F0C" }}>
       <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Cormorant+Garamond:wght@300;400;500;600&display=swap" rel="stylesheet" />
  
-      <Navbar />
-      <FilterBar filters={filters} setFilters={setFilters} sortBy={sortBy} setSortBy={setSortBy} resultCount={filtered.length} />
+      <SharedNavbar />
+
+      {/* Demo data notice */}
+      <div className="px-6 py-2 text-center" style={{ background: "rgba(193,172,132,0.06)", borderBottom: "1px solid rgba(193,172,132,0.08)" }}>
+        <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "0.7rem", color: "rgba(193,172,132,0.5)", letterSpacing: "0.15em" }}>
+          Showing demo listings · Live NWMLS data coming soon
+        </span>
+      </div>
+
+      <FilterBar filters={filters} setFilters={setFilters} sortBy={sortBy} setSortBy={setSortBy} search={search} setSearch={setSearch} />
  
       {/* View mode toggle */}
       <div className="flex items-center gap-1 px-6 py-2" style={{ borderBottom: "1px solid rgba(193,172,132,0.06)" }}>

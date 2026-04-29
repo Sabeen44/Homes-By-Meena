@@ -1,47 +1,10 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
-
-// ─── Animation Hooks ───
-function useInView(threshold = 0.15) {
-  const ref = useRef(null);
-  const [isVisible, setVisible] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } },
-      { threshold }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [threshold]);
-  return [ref, isVisible];
-}
-
-function FadeUp({ children, delay = 0, className = "" }) {
-  const [ref, vis] = useInView();
-  return (
-    <div ref={ref} className={className} style={{
-      opacity: vis ? 1 : 0,
-      transform: vis ? "translateY(0)" : "translateY(40px)",
-      transition: `opacity 0.8s cubic-bezier(.16,1,.3,1) ${delay}s, transform 0.8s cubic-bezier(.16,1,.3,1) ${delay}s`,
-    }}>{children}</div>
-  );
-}
-
-function SlideIn({ children, delay = 0, from = "left", className = "" }) {
-  const [ref, vis] = useInView();
-  const x = from === "left" ? "-60px" : "60px";
-  return (
-    <div ref={ref} className={className} style={{
-      opacity: vis ? 1 : 0,
-      transform: vis ? "translate(0,0)" : `translateX(${x})`,
-      transition: `opacity 0.9s cubic-bezier(.16,1,.3,1) ${delay}s, transform 0.9s cubic-bezier(.16,1,.3,1) ${delay}s`,
-    }}>{children}</div>
-  );
-}
+import { FadeUp, SlideIn } from "@/components/animations/FadeUp";
+import { useInView } from "@/lib/hooks";
+import { AGENT } from "@/lib/data";
 
 // ─── Animated Counter ───
 function Counter({ end, suffix = "", prefix = "" }) {
@@ -350,7 +313,7 @@ function HeroValuation() {
                 </p>
                 <p className="mt-6" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "0.85rem", color: "rgba(193,172,132,0.5)", letterSpacing: "0.1em" }}>
                   Questions? Call directly at{" "}
-                  <a href="tel:4256288863" style={{ color: "#C1AC84" }}>425-628-8863</a>
+                  <a href={`tel:${AGENT.phoneTel}`} style={{ color: "#C1AC84" }}>{AGENT.phone}</a>
                 </p>
               </div>
             )}
@@ -677,7 +640,7 @@ function BottomCTA() {
             </button>
             <button className="px-10 py-4 text-xs tracking-widest uppercase transition-all duration-300 hover:bg-white/5"
               style={{ fontFamily: "'Cormorant Garamond', serif", border: "1px solid rgba(193,172,132,0.3)", color: "#C1AC84" }}>
-              Call 425-628-8863
+              Call {AGENT.phone}
             </button>
           </div>
         </FadeUp>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { STATS } from "@/lib/data";
+import { STATS, AGENT } from "@/lib/data";
 
 
 
@@ -162,10 +162,10 @@ export default function Hero() {
             }}
           >
             <div style={{ fontFamily: "'Cormorant Garamond', serif", color: "rgba(255,255,255,0.4)", fontSize: "0.65rem", letterSpacing: "0.3em", textTransform: "uppercase" }}>
-              Meena Dhawan
+              {AGENT.name}
             </div>
             <div style={{ fontFamily: "'Playfair Display', serif", color: "#C1AC84", fontSize: "1rem", marginTop: "0.25rem" }}>
-              425-628-8863
+              {AGENT.phone}
             </div>
           </div>
         </div>

@@ -1,30 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-
-// ─── Animation ───
-function useInView(threshold = 0.1) {
-  const ref = useRef(null);
-  const [vis, setVis] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setVis(true); obs.disconnect(); } }, { threshold });
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [threshold]);
-  return [ref, vis];
-}
-
-function FadeUp({ children, delay = 0, className = "" }) {
-  const [ref, vis] = useInView();
-  return (
-    <div ref={ref} className={className} style={{
-      opacity: vis ? 1 : 0, transform: vis ? "translateY(0)" : "translateY(36px)",
-      transition: `opacity 0.8s cubic-bezier(.16,1,.3,1) ${delay}s, transform 0.8s cubic-bezier(.16,1,.3,1) ${delay}s`,
-    }}>{children}</div>
-  );
-}
+import { useState, useEffect } from "react";
+import Navbar from "@/components/Navbar";
+import { FadeUp } from "@/components/animations/FadeUp";
 
 // ─── Data ───
 const SOLD = [
@@ -184,32 +162,7 @@ export default function RecentSalesPage() {
     <div style={{ background: "#0F0F0C", minHeight: "100vh" }}>
       <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
 
-      {/* ── Navbar ── */}
-      <nav className="fixed top-0 left-0 w-full z-50 transition-all duration-500"
-        style={{ background: "rgba(15,15,12,0.92)", backdropFilter: "blur(16px)", borderBottom: "1px solid rgba(193,172,132,0.12)" }}>
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <a href="/" className="flex flex-col leading-none">
-            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", color: "#C1AC84", letterSpacing: "0.04em" }}>HOMES</span>
-            <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "0.7rem", color: "rgba(193,172,132,0.6)", letterSpacing: "0.35em", textTransform: "uppercase" }}>by Meena</span>
-          </a>
-          <div className="hidden md:flex items-center gap-8">
-            {[
-              { label: "Buy", href: "/buy" },
-              { label: "Home Value", href: "/homevaluepage" },
-              { label: "Recent Sales", href: "/recentsales", active: true },
-              { label: "About", href: "/#about" },
-              { label: "Contact", href: "/#contact" },
-            ].map((item) => (
-              <a key={item.label} href={item.href} className="relative group"
-                style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "0.85rem", color: item.active ? "#C1AC84" : "rgba(255,255,255,0.7)", letterSpacing: "0.2em", textTransform: "uppercase" }}>
-                {item.label}
-                <span className="absolute -bottom-1 left-0 h-px bg-amber-400 transition-all duration-300 group-hover:w-full"
-                  style={{ width: item.active ? "100%" : "0" }} />
-              </a>
-            ))}
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* ── Hero ── */}
       <section className="relative pt-32 pb-20 overflow-hidden" style={{ background: "#0F0F0C" }}>

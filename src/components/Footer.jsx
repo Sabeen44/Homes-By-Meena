@@ -10,9 +10,15 @@ export default function Footer() {
           © 2026 Meena Dhawan · Keller Williams Eastside · All Rights Reserved
         </p>
         <div className="flex gap-6">
-          {["Facebook", "Instagram", "LinkedIn"].map((s) => (
-            <a key={s} href="#" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "0.7rem", color: "rgba(193,172,132,0.4)", letterSpacing: "0.15em", textTransform: "uppercase" }} className="hover:text-amber-200 transition-colors">
-              {s}
+          {[
+            { label: "Facebook", href: "https://www.facebook.com/meena.dhawan.realtor" },
+            { label: "Instagram", href: "https://www.instagram.com/meenadhawan.realtor" },
+            { label: "Zillow", href: "https://www.zillow.com/profile/Meena%20Dhawan" },
+          ].map((s) => (
+            <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
+              style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "0.7rem", color: "rgba(193,172,132,0.4)", letterSpacing: "0.15em", textTransform: "uppercase" }}
+              className="hover:text-amber-200 transition-colors">
+              {s.label}
             </a>
           ))}
         </div>
