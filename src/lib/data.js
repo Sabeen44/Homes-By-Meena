@@ -80,8 +80,8 @@ export const COMMUNITIES = [
 ];
 
 export const STATS = [
-  { num: "$34M+", label: "Total Volume" },
+  { num: "15+", label: "Years Experience" },
   { num: "Top 5%", label: "KW Worldwide" },
-  { num: "29+", label: "Transactions" },
+  { num: "100+", label: "Families Served" },
   { num: "5★", label: "Client Rating" },
 ];

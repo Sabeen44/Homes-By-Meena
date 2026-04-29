@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { SlideIn } from "./animations/FadeUp";
 
 export default function About() {
@@ -47,12 +48,13 @@ export default function About() {
             </div>
 
             <div className="mt-10 flex gap-4">
-              <button
-                className="px-8 py-3 text-xs tracking-widest uppercase transition-all duration-300 hover:scale-105"
+              <Link
+                href="/#contact"
+                className="px-8 py-3 text-xs tracking-widest uppercase transition-all duration-300 hover:scale-105 inline-block"
                 style={{ fontFamily: "'Cormorant Garamond', serif", background: "#C1AC84", color: "#0F0F0C", fontWeight: 600 }}
               >
                 Meet Meena
-              </button>
+              </Link>
             </div>
           </SlideIn>
         </div>

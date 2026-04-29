@@ -287,24 +287,21 @@ function FilterBar({ filters, setFilters, sortBy, setSortBy, search, setSearch }
     return () => document.removeEventListener("mousedown", handler);
   }, []);
  
-  const Dropdown = ({ label, value, options, filterKey }) => (
+  const Dropdown = ({ value, options, filterKey }) => (
     <div className="relative">
       <button
         onClick={() => setExpanded(expanded === filterKey ? null : filterKey)}
-        className="flex items-center gap-2 px-4 py-2.5 transition-all duration-200 hover:bg-white/[0.03]"
+        className="flex items-center gap-2 px-4 py-2.5 transition-all duration-200"
         style={{
-          border: "1px solid rgba(193,172,132,0.12)",
-          background: expanded === filterKey ? "rgba(193,172,132,0.06)" : "transparent",
+          border: "1px solid rgba(193,172,132,0.3)",
+          background: expanded === filterKey ? "rgba(193,172,132,0.1)" : "#FFFFFF",
         }}
       >
-        <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "0.7rem", color: "rgba(193,172,132,0.4)", letterSpacing: "0.2em", textTransform: "uppercase" }}>
-          {label}
-        </span>
-        <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "0.85rem", color: "#FDFBF7" }}>
+        <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "0.85rem", color: "#1C1A13" }}>
           {value}
         </span>
         <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style={{ marginLeft: "4px", transform: expanded === filterKey ? "rotate(180deg)" : "", transition: "transform 0.2s" }}>
-          <path d="M1 1L5 5L9 1" stroke="rgba(193,172,132,0.4)" strokeWidth="1.2" />
+          <path d="M1 1L5 5L9 1" stroke="rgba(193,172,132,0.7)" strokeWidth="1.2" />
         </svg>
       </button>
  
@@ -340,10 +337,10 @@ function FilterBar({ filters, setFilters, sortBy, setSortBy, search, setSearch }
   );
  
   return (
-    <div ref={filterRef} className="flex flex-wrap items-center gap-3 px-6 py-4" style={{ borderBottom: "1px solid rgba(193,172,132,0.06)" }}>
+    <div ref={filterRef} className="flex flex-wrap items-center gap-3 px-6 py-4" style={{ background: "rgba(253,251,247,0.97)", borderBottom: "1px solid rgba(193,172,132,0.25)" }}>
       {/* Search input */}
       <div className="relative flex-1 min-w-[200px]">
-        <svg className="absolute left-3 top-1/2 -translate-y-1/2" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(193,172,132,0.3)" strokeWidth="2">
+        <svg className="absolute left-3 top-1/2 -translate-y-1/2" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(193,172,132,0.6)" strokeWidth="2">
           <circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" />
         </svg>
         <input
@@ -351,13 +348,13 @@ function FilterBar({ filters, setFilters, sortBy, setSortBy, search, setSearch }
           placeholder="Address, city, or ZIP..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-9 pr-4 py-2.5 outline-none transition-all duration-200 focus:border-gold/30"
+          className="w-full pl-9 pr-4 py-2.5 outline-none transition-all duration-200"
           style={{
             fontFamily: "'Cormorant Garamond', serif",
             fontSize: "0.85rem",
-            background: "rgba(255,255,255,0.02)",
-            border: "1px solid rgba(193,172,132,0.12)",
-            color: "#FDFBF7",
+            background: "#FFFFFF",
+            border: "1px solid rgba(193,172,132,0.3)",
+            color: "#1C1A13",
           }}
         />
       </div>
@@ -372,28 +369,28 @@ function FilterBar({ filters, setFilters, sortBy, setSortBy, search, setSearch }
           placeholder="Min Price"
           value={filters.minPrice}
           onChange={(e) => setFilters({ ...filters, minPrice: e.target.value })}
-          className="w-24 px-3 py-2.5 outline-none text-center transition-all duration-200 focus:border-gold/30"
+          className="w-24 px-3 py-2.5 outline-none text-center transition-all duration-200"
           style={{
             fontFamily: "'Cormorant Garamond', serif",
             fontSize: "0.8rem",
-            background: "rgba(255,255,255,0.02)",
-            border: "1px solid rgba(193,172,132,0.12)",
-            color: "#FDFBF7",
+            background: "#FFFFFF",
+            border: "1px solid rgba(193,172,132,0.3)",
+            color: "#1C1A13",
           }}
         />
-        <span style={{ color: "rgba(193,172,132,0.2)", fontSize: "0.7rem" }}>to</span>
+        <span style={{ color: "rgba(193,172,132,0.6)", fontSize: "0.7rem" }}>to</span>
         <input
           type="text"
           placeholder="Max Price"
           value={filters.maxPrice}
           onChange={(e) => setFilters({ ...filters, maxPrice: e.target.value })}
-          className="w-24 px-3 py-2.5 outline-none text-center transition-all duration-200 focus:border-gold/30"
+          className="w-24 px-3 py-2.5 outline-none text-center transition-all duration-200"
           style={{
             fontFamily: "'Cormorant Garamond', serif",
             fontSize: "0.8rem",
-            background: "rgba(255,255,255,0.02)",
-            border: "1px solid rgba(193,172,132,0.12)",
-            color: "#FDFBF7",
+            background: "#FFFFFF",
+            border: "1px solid rgba(193,172,132,0.3)",
+            color: "#1C1A13",
           }}
         />
       </div>
@@ -408,10 +405,10 @@ function FilterBar({ filters, setFilters, sortBy, setSortBy, search, setSearch }
             style={{
               fontFamily: "'Cormorant Garamond', serif",
               fontSize: "0.8rem",
-              background: filters.beds === b ? "rgba(193,172,132,0.12)" : "transparent",
-              border: "1px solid rgba(193,172,132,0.12)",
+              background: filters.beds === b ? "#C1AC84" : "#FFFFFF",
+              border: "1px solid rgba(193,172,132,0.3)",
               borderLeft: b !== "Any" ? "none" : undefined,
-              color: filters.beds === b ? "#C1AC84" : "rgba(253,251,247,0.4)",
+              color: filters.beds === b ? "#FFFFFF" : "#1C1A13",
             }}
           >
             {b === "Any" ? "Beds" : b}
@@ -428,18 +425,18 @@ function FilterBar({ filters, setFilters, sortBy, setSortBy, search, setSearch }
           style={{
             fontFamily: "'Cormorant Garamond', serif",
             fontSize: "0.8rem",
-            background: "rgba(255,255,255,0.02)",
-            border: "1px solid rgba(193,172,132,0.12)",
-            color: "rgba(253,251,247,0.5)",
+            background: "#FFFFFF",
+            border: "1px solid rgba(193,172,132,0.3)",
+            color: "#1C1A13",
             appearance: "none",
             paddingRight: "24px",
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='rgba(193,172,132,0.4)' stroke-width='1.2'/%3E%3C/svg%3E")`,
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='rgba(193,172,132,0.7)' stroke-width='1.2'/%3E%3C/svg%3E")`,
             backgroundRepeat: "no-repeat",
             backgroundPosition: "right 8px center",
           }}
         >
           {SORT_OPTIONS.map((o) => (
-            <option key={o} value={o} style={{ background: "#14140F", color: "#FDFBF7" }}>{o}</option>
+            <option key={o} value={o} style={{ background: "#FDFBF7", color: "#1C1A13" }}>{o}</option>
           ))}
         </select>
       </div>
@@ -594,14 +591,14 @@ export default function MapSearchPage() {
   const detailListing = SAMPLE_LISTINGS.find((l) => l.id === detailId);
  
   return (
-    <div className="h-screen flex flex-col overflow-hidden" style={{ background: "#0F0F0C" }}>
+    <div className="h-screen flex flex-col overflow-hidden pt-16" style={{ background: "#0F0F0C" }}>
       <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Cormorant+Garamond:wght@300;400;500;600&display=swap" rel="stylesheet" />
  
       <SharedNavbar />
 
       {/* Demo data notice */}
       <div className="px-6 py-2 text-center" style={{ background: "rgba(193,172,132,0.06)", borderBottom: "1px solid rgba(193,172,132,0.08)" }}>
-        <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "0.7rem", color: "rgba(193,172,132,0.5)", letterSpacing: "0.15em" }}>
+        <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "0.85rem", color: "#C1AC84", letterSpacing: "0.15em" }}>
           Showing demo listings · Live NWMLS data coming soon
         </span>
       </div>
@@ -683,7 +680,7 @@ export default function MapSearchPage() {
                         isHovered={hoveredId === listing.id}
                         isSelected={selectedId === listing.id}
                         onHover={setHoveredId}
-                        onSelect={setDetailId}
+                        onSelect={(id) => { setDetailId(id); setSelectedId(id); }}
                       />
                     </div>
                   ))
