@@ -108,6 +108,20 @@ export default function Hero() {
             >
               Get a Home Valuation
             </Link>
+            <a
+href="#reels"
+ className="px-8 py-3.5 text-sm tracking-widest uppercase transition-all duration-300 hover:scale-105 inline-block"
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                border: "1px solid rgba(193,172,132,0.3)",
+                
+                color: "#FFFFFF",
+                fontWeight: 600,
+  }}
+>
+  🎬 Watch my latest reel ↓
+</a>
+
           </div>
 
           {/* Stats row */}

@@ -1,79 +1,143 @@
-
-"use client"
-import { useState, useEffect } from "react";
+"use client";
 import { FadeUp } from "./animations/FadeUp";
 import { TESTIMONIALS } from "@/lib/data";
 
-export default function  Testimonials() {
-  const [active, setActive] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => setActive((p) => (p + 1) % TESTIMONIALS.length), 6000);
-    return () => clearInterval(timer);
-  }, []);
-
+export default function Testimonials() {
   return (
-    <section className="py-28 relative" style={{ background: "#0F0F0C" }}>
-      <div className="max-w-4xl mx-auto px-6 text-center">
+    <section className="py-28 relative" style={{ background: "#13130F" }}>
+      <div className="max-w-5xl mx-auto px-6">
         <FadeUp>
-          <p style={{ fontFamily: "'Cormorant Garamond', serif", color: "#C1AC84", letterSpacing: "0.35em", textTransform: "uppercase", fontSize: "0.75rem" }}>
+          <p
+            className="text-center mb-16"
+            style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              color: "#C1AC84",
+              letterSpacing: "0.35em",
+              textTransform: "uppercase",
+              fontSize: "0.75rem",
+            }}
+          >
             Client Stories
           </p>
-          {/* Large quote mark */}
-          <div className="mt-6" style={{ fontFamily: "'Playfair Display', serif", fontSize: "5rem", color: "rgba(193,172,132,0.15)", lineHeight: 1 }}>"</div>
         </FadeUp>
 
-        <div className="relative mt-2" style={{ minHeight: "200px" }}>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {TESTIMONIALS.map((t, i) => (
-            <div
-              key={i}
-              className="absolute inset-0 flex flex-col items-center justify-center transition-all duration-700"
-              style={{
-                opacity: active === i ? 1 : 0,
-                transform: active === i ? "translateY(0)" : "translateY(20px)",
-                pointerEvents: active === i ? "auto" : "none",
-              }}
-            >
-              <p style={{
-                fontFamily: "'Playfair Display', serif",
-                fontSize: "clamp(1.1rem, 2vw, 1.5rem)",
-                color: "rgba(253,251,247,0.75)",
-                lineHeight: 1.7,
-                fontWeight: 400,
-                fontStyle: "italic",
-                maxWidth: "600px",
-              }}>
-                {t.text}
-              </p>
-              <div className="mt-8">
-                <div style={{ fontFamily: "'Cormorant Garamond', serif", color: "#C1AC84", fontSize: "0.85rem", letterSpacing: "0.15em" }}>
+            <FadeUp key={i} delay={i * 0.15}>
+              <div
+                className="h-full transition-all duration-500 hover:translate-y-[-4px]"
+                style={{
+                  background: "rgba(255,255,255,0.02)",
+                  borderLeft: "2px solid #C1AC84",
+                  padding: "28px 24px",
+                }}
+              >
+                {/* Quote mark */}
+                <div
+                  style={{
+                    fontFamily: "'Playfair Display', serif",
+                    fontSize: "3rem",
+                    color: "rgba(193,172,132,0.12)",
+                    lineHeight: 1,
+                    marginBottom: "-8px",
+                  }}
+                >
+                  "
+                </div>
+
+                {/* Testimonial text */}
+                <p
+                  style={{
+                    fontFamily: "'Playfair Display', serif",
+                    fontSize: "clamp(0.95rem, 1.5vw, 1.1rem)",
+                    color: "rgba(253,251,247,0.65)",
+                    lineHeight: 1.75,
+                    fontWeight: 400,
+                    fontStyle: "italic",
+                    marginBottom: "24px",
+                  }}
+                >
+                  {t.text}
+                </p>
+
+                {/* Divider */}
+                <div
+                  style={{
+                    width: "24px",
+                    height: "1px",
+                    background: "rgba(193,172,132,0.25)",
+                    marginBottom: "16px",
+                  }}
+                />
+
+                {/* Client name */}
+                <div
+                  style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                    color: "#C1AC84",
+                    fontSize: "0.85rem",
+                    letterSpacing: "0.15em",
+                  }}
+                >
                   {t.name}
                 </div>
-                <div style={{ fontFamily: "'Cormorant Garamond', serif", color: "rgba(255,255,255,0.3)", fontSize: "0.7rem", letterSpacing: "0.25em", textTransform: "uppercase", marginTop: "0.25rem" }}>
+
+                {/* Location */}
+                <div
+                  style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                    color: "rgba(255,255,255,0.25)",
+                    fontSize: "0.7rem",
+                    letterSpacing: "0.25em",
+                    textTransform: "uppercase",
+                    marginTop: "4px",
+                  }}
+                >
                   Happily living in {t.location}
                 </div>
               </div>
-            </div>
+            </FadeUp>
           ))}
         </div>
 
-        {/* Dots */}
-        <div className="mt-12 flex justify-center gap-3">
-          {TESTIMONIALS.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setActive(i)}
-              className="transition-all duration-300"
+        {/* Zillow link */}
+        <FadeUp delay={0.5}>
+          <div className="text-center mt-14">
+            <a
+              href="https://www.zillow.com/profile/Meena%20Dhawan"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 transition-all duration-300 hover:opacity-80"
               style={{
-                width: active === i ? "24px" : "8px",
-                height: "2px",
-                background: active === i ? "#C1AC84" : "rgba(193,172,132,0.2)",
+                fontFamily: "'Cormorant Garamond', serif",
+                color: "rgba(193,172,132,0.4)",
+                fontSize: "0.75rem",
+                letterSpacing: "0.2em",
+                textTransform: "uppercase",
+                textDecoration: "none",
+                borderBottom: "1px solid rgba(193,172,132,0.15)",
+                paddingBottom: "2px",
               }}
-            />
-          ))}
-        </div>
+            >
+              Read more reviews on Zillow
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                <polyline points="15 3 21 3 21 9" />
+                <line x1="10" y1="14" x2="21" y2="3" />
+              </svg>
+            </a>
+          </div>
+        </FadeUp>
       </div>
     </section>
   );
 }
-
