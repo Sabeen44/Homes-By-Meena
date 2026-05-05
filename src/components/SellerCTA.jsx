@@ -32,13 +32,7 @@ export default function SellerCTA() {
           >
             Get My Free Valuation
           </Link>
-          <Link
-            href="/#contact"
-            className="px-10 py-4 text-xs tracking-widest uppercase transition-all duration-300 hover:bg-white/5 inline-block"
-            style={{ fontFamily: "'Cormorant Garamond', serif", border: "1px solid rgba(193,172,132,0.3)", color: "#C1AC84" }}
-          >
-            Talk to Meena
-          </Link>
+        
         </FadeUp>
 
         <FadeUp delay={0.25} className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">

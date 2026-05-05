@@ -8,6 +8,7 @@ import SellerCTA from "@/components/SellerCTA";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import Reels from "@/components/Reels"
+import NewsletterSignup from "@/components/NewsletterSignup";
 
 export default function Home() {
   return (
@@ -17,6 +18,7 @@ export default function Home() {
       <FeaturedListings />
       <About />
       <Reels/>
+      <NewsletterSignup/>
       <Testimonials />
       {/* <Communities /> */}
       <SellerCTA />
