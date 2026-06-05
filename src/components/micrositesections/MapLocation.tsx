@@ -29,7 +29,7 @@ export default function MapLocation({
   const embedUrl = `https://maps.google.com/maps?q=${encodedAddress}&output=embed&z=15`
 
   return (
-    <section id="location" className="border-b border-neutral-200 px-8 py-14">
+    <section id="map" className="border-b border-neutral-200 px-8 py-14">
       <div className="max-w-5xl mx-auto">
 
         {/* Section label */}

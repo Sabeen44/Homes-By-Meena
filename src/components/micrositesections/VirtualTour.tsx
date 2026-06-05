@@ -1,6 +1,7 @@
 // components/sections/VirtualTour.tsx
 interface VirtualTourProps {
-  tourUrl: string
+  videoUrl?: string
+  tourUrl?: string
 }
 
 function getEmbedUrl(url: string): { type: 'youtube' | 'matterport' | 'unknown'; embedUrl: string } {
@@ -28,37 +29,42 @@ function getEmbedUrl(url: string): { type: 'youtube' | 'matterport' | 'unknown';
   return { type: 'unknown', embedUrl: url }
 }
 
-export default function VirtualTour({ tourUrl }: VirtualTourProps) {
-  if (!tourUrl) return null
-
-  const { embedUrl } = getEmbedUrl(tourUrl)
-
+function EmbedSection({ id, label, url, title }: { id: string; label: string; url: string; title: string }) {
+  const { embedUrl } = getEmbedUrl(url)
   return (
-    <section className="border-b border-neutral-200 px-8 py-14">
+    <section id={id} className="border-b border-neutral-200 px-8 py-14">
       <div className="max-w-5xl mx-auto">
-
-        {/* Section label */}
         <p className="text-[11px] tracking-widest uppercase text-neutral-400 mb-8">
-          Virtual tour
+          {label}
         </p>
-
-        {/* Embed */}
         <div className="relative w-full aspect-video bg-neutral-50 border border-neutral-200 rounded-sm overflow-hidden">
           <iframe
             src={embedUrl}
-            title="Property virtual tour"
+            title={title}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
             allowFullScreen
             className="absolute inset-0 w-full h-full"
           />
         </div>
-
-        {/* Caption */}
         <p className="text-xs text-neutral-400 mt-3 tracking-wide">
           Use fullscreen for the best experience
         </p>
-
       </div>
     </section>
+  )
+}
+
+export default function VirtualTour({ videoUrl, tourUrl }: VirtualTourProps) {
+  if (!videoUrl && !tourUrl) return null
+
+  return (
+    <>
+      {videoUrl && (
+        <EmbedSection id="video" label="Video" url={videoUrl} title="Property video" />
+      )}
+      {tourUrl && (
+        <EmbedSection id="vtour" label="3D Tour" url={tourUrl} title="Property virtual tour" />
+      )}
+    </>
   )
 }

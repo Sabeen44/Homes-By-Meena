@@ -2,9 +2,8 @@
 
 import { client } from '@/sanity/lib/client'
 import { urlFor } from '@/sanity/lib/image'
-
-
 import Link from 'next/link'
+import NextImage from 'next/image'
 import { notFound } from 'next/navigation'
 
 // ── GROQ query ────────────────────────────────────────────────────────────────
@@ -22,7 +21,7 @@ const QUERY = `
   }
 `
 
-// ── Static params (optional but recommended for performance) ──────────────────
+// ── Static params ─────────────────────────────────────────────────────────────
 export async function generateStaticParams() {
   const slugs = await client.fetch(
     `*[_type == "micrositeLinkList" && defined(slug.current)]{ "slug": slug.current }`
@@ -76,27 +75,12 @@ export default async function MicrositePage({ params }) {
           display: flex;
           flex-direction: column;
           align-items: center;
-          padding: 3rem 1.25rem 4rem;
-          position: relative;
-        }
-
-        /* Subtle warm gradient bg */
-        .page::before {
-          content: '';
-          position: fixed;
-          inset: 0;
-          background:
-            radial-gradient(ellipse 80% 50% at 50% -10%, rgba(184,147,90,0.12) 0%, transparent 70%),
-            radial-gradient(ellipse 60% 40% at 100% 100%, rgba(184,147,90,0.07) 0%, transparent 60%);
-          pointer-events: none;
-          z-index: 0;
+          padding: 3rem 1.5rem 4rem;
         }
 
         .inner {
           width: 100%;
-          max-width: 440px;
-          position: relative;
-          z-index: 1;
+          max-width: 1400px;
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -109,7 +93,7 @@ export default async function MicrositePage({ params }) {
           flex-direction: column;
           align-items: center;
           text-align: center;
-          margin-bottom: 2.5rem;
+          margin-bottom: 3rem;
           animation: fadeUp 0.6s ease both;
         }
 
@@ -122,7 +106,7 @@ export default async function MicrositePage({ params }) {
           margin-bottom: 1.25rem;
           background: var(--warm);
           flex-shrink: 0;
-          box-shadow: 0 4px 20px rgba(184,147,90,0.2);
+          box-shadow: 0 4px 20px rgba(184,147,90,0.3);
         }
 
         .logo-wrap img {
@@ -143,7 +127,7 @@ export default async function MicrositePage({ params }) {
 
         .heading {
           font-family: 'Cormorant Garamond', serif;
-          font-size: clamp(1.6rem, 5vw, 2rem);
+          font-size: clamp(1.6rem, 5vw, 2.2rem);
           font-weight: 600;
           line-height: 1.2;
           color: var(--ink);
@@ -167,107 +151,137 @@ export default async function MicrositePage({ params }) {
           opacity: 0.5;
         }
 
-        /* ── Link cards ── */
+        /* ── Card grid ── */
         .links {
           width: 100%;
-          display: flex;
-          flex-direction: column;
-          gap: 0.75rem;
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 1rem;
+          list-style: none;
         }
 
+        @media (max-width: 700px) {
+          .links {
+            grid-template-columns: 1fr;
+          }
+        }
+
+        @media (min-width: 701px) and (max-width: 900px) {
+          .links {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+
+        /* Centre a lone card */
+        .links li:only-child {
+          grid-column: 1 / -1;
+          max-width: 400px;
+          margin: 0 auto;
+          width: 100%;
+        }
+
+        /* ── Image card ── */
         .link-card {
-          display: flex;
-          align-items: center;
-          gap: 1rem;
-          background: #fff;
-          border: 1px solid var(--border);
-          border-radius: 12px;
-          padding: 1rem 1.25rem;
+          position: relative;
+          display: block;
+          aspect-ratio: 4 / 5;
+          border-radius: 16px;
+          overflow: hidden;
+          background: #2a2724;
           text-decoration: none;
           color: inherit;
-          transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
           animation: fadeUp 0.5s ease both;
         }
 
-        .link-card:hover {
-          border-color: var(--gold-lt);
-          box-shadow: 0 6px 24px rgba(184,147,90,0.15);
-          transform: translateY(-2px);
-        }
+        .link-card:nth-child(1) { animation-delay: 0.05s; }
+        .link-card:nth-child(2) { animation-delay: 0.13s; }
+        .link-card:nth-child(3) { animation-delay: 0.21s; }
+        .link-card:nth-child(4) { animation-delay: 0.29s; }
+        .link-card:nth-child(5) { animation-delay: 0.37s; }
+        .link-card:nth-child(6) { animation-delay: 0.45s; }
 
-        .link-card:active {
-          transform: translateY(0);
-        }
-
-        /* stagger each card */
-        .link-card:nth-child(1) { animation-delay: 0.1s; }
-        .link-card:nth-child(2) { animation-delay: 0.18s; }
-        .link-card:nth-child(3) { animation-delay: 0.26s; }
-        .link-card:nth-child(4) { animation-delay: 0.34s; }
-        .link-card:nth-child(5) { animation-delay: 0.42s; }
-        .link-card:nth-child(6) { animation-delay: 0.50s; }
-
-        .icon-wrap {
-          width: 44px;
-          height: 44px;
-          border-radius: 8px;
-          overflow: hidden;
-          background: var(--warm);
-          flex-shrink: 0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border: 1px solid var(--border);
-        }
-
-        .icon-wrap img {
+        .card-image {
+          position: absolute;
+          inset: 0;
           width: 100%;
           height: 100%;
           object-fit: cover;
+          transition: transform 0.6s ease;
         }
 
-        .icon-placeholder {
-          width: 20px;
-          height: 20px;
-          opacity: 0.3;
+        .link-card:hover .card-image {
+          transform: scale(1.06);
         }
 
-        .link-text {
-          flex: 1;
-          min-width: 0;
+        /* Always-visible bottom gradient + title */
+        .card-bottom {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.1) 50%, transparent 100%);
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-end;
+          padding: 1.5rem;
+          transition: background 0.3s ease;
         }
 
-        .link-title {
-          font-size: 0.9rem;
-          font-weight: 500;
-          color: var(--ink);
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
+        .link-card:hover .card-bottom {
+          background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0.15) 100%);
         }
 
-        .link-desc {
-          font-size: 0.75rem;
+        .card-title {
+          font-family: 'Cormorant Garamond', serif;
+          font-size: 1.4rem;
+          font-weight: 600;
+          color: #fff;
+          line-height: 1.2;
+          margin-bottom: 0.5rem;
+        }
+
+        .card-desc {
+          font-size: 0.8rem;
           font-weight: 300;
-          color: var(--muted);
-          margin-top: 0.15rem;
+          color: rgba(255,255,255,0.65);
+          line-height: 1.5;
+          margin-bottom: 0.9rem;
           display: -webkit-box;
           -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
           overflow: hidden;
         }
 
-        .arrow {
-          color: var(--gold);
-          flex-shrink: 0;
-          opacity: 0.7;
-          font-size: 1rem;
-          transition: opacity 0.2s, transform 0.2s;
+        .card-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.4rem;
+          background: var(--gold);
+          color: #fff;
+          font-family: 'Jost', sans-serif;
+          font-size: 0.75rem;
+          font-weight: 500;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          padding: 0.55rem 1.2rem;
+          border-radius: 8px;
+          opacity: 0;
+          transform: translateY(6px);
+          transition: opacity 0.3s ease, transform 0.3s ease;
+          width: fit-content;
         }
 
-        .link-card:hover .arrow {
+        .link-card:hover .card-btn {
           opacity: 1;
-          transform: translateX(3px);
+          transform: translateY(0);
+        }
+
+        /* No-image fallback */
+        .card-no-image {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: #2a2724;
         }
 
         /* ── Footer ── */
@@ -285,7 +299,7 @@ export default async function MicrositePage({ params }) {
           text-transform: uppercase;
           color: var(--gold);
           text-decoration: none;
-          opacity: 0.7;
+          opacity: 0.6;
           transition: opacity 0.2s;
         }
 
@@ -304,9 +318,12 @@ export default async function MicrositePage({ params }) {
           <header className="header">
             {data.logo?.asset && (
               <div className="logo-wrap">
-                <img
+                <NextImage
                   src={urlFor(data.logo).width(160).height(160).url()}
                   alt={data.logo.alt || 'Logo'}
+                  width={160}
+                  height={160}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />
               </div>
             )}
@@ -317,8 +334,8 @@ export default async function MicrositePage({ params }) {
 
           <div className="divider" />
 
-          {/* Links */}
-          <ul className="links" role="list" style={{ listStyle: 'none' }}>
+          {/* Image card grid */}
+          <ul className="links" role="list">
             {data.links.map((link) => (
               <li key={link.url}>
                 <a
@@ -327,26 +344,25 @@ export default async function MicrositePage({ params }) {
                   rel="noopener noreferrer"
                   className="link-card"
                 >
-                  <div className="icon-wrap">
-                    {link.icon?.asset ? (
-                      <img
-                        src={urlFor(link.icon).width(88).height(88).url()}
-                        alt={link.icon.alt || link.title}
-                      />
-                    ) : (
-                      <svg className="icon-placeholder" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
-                        <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
-                      </svg>
-                    )}
-                  </div>
-                  <div className="link-text">
-                    <p className="link-title">{link.title}</p>
+                  {link.icon?.asset ? (
+                    <NextImage
+                      fill
+                      className="card-image"
+                      src={urlFor(link.icon).width(800).height(1000).auto('format').url()}
+                      alt={link.icon.alt || link.title}
+                      sizes="(max-width: 700px) 100vw, (max-width: 900px) 50vw, 33vw"
+                    />
+                  ) : (
+                    <div className="card-no-image" />
+                  )}
+
+                  <div className="card-bottom">
+                    <p className="card-title">{link.title}</p>
                     {link.description && (
-                      <p className="link-desc">{link.description}</p>
+                      <p className="card-desc">{link.description}</p>
                     )}
+                    <span className="card-btn">View Now →</span>
                   </div>
-                  <span className="arrow" aria-hidden>→</span>
                 </a>
               </li>
             ))}

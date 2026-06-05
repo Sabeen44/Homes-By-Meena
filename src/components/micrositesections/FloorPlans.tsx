@@ -15,7 +15,7 @@ export default function FloorPlans({ plans }: FloorPlansProps) {
   if (!plans?.length) return null
 
   return (
-    <section className="border-b border-neutral-200 px-8 py-14">
+    <section id="floorplans" className="border-b border-neutral-200 px-8 py-14">
       <div className="max-w-5xl mx-auto">
 
         {/* Section label */}
