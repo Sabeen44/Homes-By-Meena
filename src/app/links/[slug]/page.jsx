@@ -98,45 +98,37 @@ export default async function MicrositePage({ params }) {
         }
 
         .logo-wrap {
-          width: 80px;
-          height: 80px;
-          border-radius: 50%;
-          overflow: hidden;
-          border: 2px solid var(--gold);
           margin-bottom: 1.25rem;
-          background: var(--warm);
-          flex-shrink: 0;
-          box-shadow: 0 4px 20px rgba(184,147,90,0.3);
         }
 
         .logo-wrap img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
+          max-width: 220px;
+          height: auto;
+          display: block;
         }
 
         .wordmark {
           font-family: 'Cormorant Garamond', serif;
-          font-size: 0.65rem;
+          font-size: 1rem;
           font-weight: 500;
           letter-spacing: 0.22em;
           text-transform: uppercase;
           color: var(--gold);
-          margin-bottom: 0.6rem;
+          margin-bottom: 6rem;
         }
 
         .heading {
           font-family: 'Cormorant Garamond', serif;
-          font-size: clamp(1.6rem, 5vw, 2.2rem);
-          font-weight: 600;
-          line-height: 1.2;
+          font-size: clamp(4rem, 7vw, 3.5rem);
+          font-weight: 800;
+          line-height: 1.15;
           color: var(--ink);
           margin-bottom: 0.5rem;
         }
 
         .subheading {
-          font-size: 0.85rem;
-          font-weight: 300;
+          font-size: 1rem;
+          font-weight: 400;
           color: var(--muted);
           line-height: 1.6;
           max-width: 30ch;
@@ -293,17 +285,16 @@ export default async function MicrositePage({ params }) {
 
         .footer-brand {
           font-family: 'Cormorant Garamond', serif;
-          font-size: 0.75rem;
+          font-size: 1rem;
           font-weight: 500;
           letter-spacing: 0.18em;
           text-transform: uppercase;
           color: var(--gold);
           text-decoration: none;
-          opacity: 0.6;
-          transition: opacity 0.2s;
+          transition: color 0.2s ease;
         }
 
-        .footer-brand:hover { opacity: 1; }
+        .footer-brand:hover { color: var(--ink); }
 
         @keyframes fadeUp {
           from { opacity: 0; transform: translateY(14px); }
@@ -319,11 +310,11 @@ export default async function MicrositePage({ params }) {
             {data.logo?.asset && (
               <div className="logo-wrap">
                 <NextImage
-                  src={urlFor(data.logo).width(160).height(160).url()}
+                  src={urlFor(data.logo).width(440).url()}
                   alt={data.logo.alt || 'Logo'}
-                  width={160}
-                  height={160}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  width={220}
+                  height={220}
+                  style={{ width: '220px', height: 'auto' }}
                 />
               </div>
             )}
